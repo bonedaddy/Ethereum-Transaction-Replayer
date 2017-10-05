@@ -22,6 +22,9 @@ You must also create a transaction text file with 3 columns:
 Transaction file example:
 0x0E06725F9D6b4766740D99533Ad65D9fb2028c93 0.93508444 283.12
 
+Command invocation example:
+* python3.5 transactionReplay.py 0x0E06725F9D6b4766740D99533Ad65D9fb2028c93 0x61d7C02120bF9215aB541DCf0d658C9FBA96F75c password123 transactions.txt contract_abi.json /home/a/.ethereum/geth.ipc
+
 ## Dependencies
 * web3py
 * sys
