@@ -1,4 +1,4 @@
-# Ethereum Transaction Replayer
+# Ethereum Transaction Replayer (currently not working)
 
 This python script can be used to replay any number of Ethereum transactions (ERC20, or plain Ether) to a particular smart contract.   
 
