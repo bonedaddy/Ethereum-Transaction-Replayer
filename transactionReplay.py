@@ -21,29 +21,38 @@ gethIpcPath = sys.argv[6]
 usdPerToken = 0.35
 tokenDict = {}
 
+
 with open(tokenContractAbiDefinition, 'r') as abi_definition:
     abi = json.load(abi_definition)
 
-with open(fileName, 'r') as fh:
-    for line in fh.readlines():
-        try:
-            addr, eth, usd = line.split()
-            amountVZTReceive = float(usd) / float(usdPerToken)
-            amountVZTReceive = '%0.2f' % float(amountVZTReceive)
-            tokenDict[addr] = amountVZTReceive
-        except Exception as e:
-            print(e)
-
+# Attach an object to the local geth instance
 web3ctl = Web3(IPCProvider(gethIpcPath))
 
+# creates a handler to interact with the contract
 tokenContractHandler = web3ctl.eth.contract(abi, tokenContractAddress)
 
 # unlock the account
 web3ctl.personal.unlockAccount(ethereumAccountAddress, ethereumAccountPassword)
 
-for key in tokenDict.keys():
-    address = key
-    vztAmount = tokenDict[key]
-    vztAmount = Web3.toWei(vztAmount, 'ether')
-    address = Web3.toChecksumAddress(address)
-    tokenContractHandler.transact({'from': ethereumAccountAddress}).transactionReplay(address, vztAmount)
+
+# open transactions.txt, storing a file handler in fh
+with open(fileName, 'r') as fh:
+    # iterate over each line of the file
+    for line in fh.readlines():
+        try:
+            # split the line into three fields (address, amount of ethereum, dollar value of eth at time of transaction)
+            addr, eth, usd = line.split()
+            # calculate the amount of VZT tokens to receive
+            amountVZTReceive = float(usd) / float(usdPerToken)
+            # truncate float to 2 decimal places
+            amountVZTReceive = '%0.2f' % float(amountVZTReceive)
+            # change to base wei
+            vztAmount = Web3.toWei(amountVZTReceive, 'ether')
+            # change to base addr
+            address = Web3.toChecksumAddress(address)
+            try:
+                tokenContractHandler.transact({'from': ethereumAccountAddress}).transactionReplay(address, vztAmount)
+            except Exception as e:
+                print("Error", e)
+        except Exception as e:
+            print(e)
