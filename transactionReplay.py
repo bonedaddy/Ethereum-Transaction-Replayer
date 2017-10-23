@@ -1,8 +1,5 @@
 from web3 import Web3, IPCProvider
-<<<<<<< HEAD
 from getpass import getpass
-=======
->>>>>>> 4346a3c6425c069cb9efac4a13b3b42c6cdf4f77
 import web3
 import sys
 import json
